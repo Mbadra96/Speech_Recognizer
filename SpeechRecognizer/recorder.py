@@ -4,12 +4,13 @@ import os
 import re
 import time
 from SpeechRecognizer.audio_player import AudioFile
-
+from SpeechRecognizer.Filter import Filteration
+from termcolor import colored
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 2
+RECORD_SECONDS = 3
 cwd = os.path.abspath(os.path.join("", os.pardir))
 Dir = cwd+"\\audio"
 catdir = cwd+"\\Categories.txt"
@@ -44,7 +45,7 @@ class SoundRecorder:
 
     def record(self, filename, cat):
 
-        print("* recording for:", cat, "after")
+        print("* you should say the following sentance:", colored(cat,'red'), "after the beep in ")
         print("3")
         time.sleep(1)
         print("2")
@@ -79,6 +80,12 @@ class SoundRecorder:
         wf.writeframes(b''.join(frames))
         wf.close()
         self.dong.play()
+        print("this is your voice")
+        AudioFile(filename).play()
+        choice = input("Is your voice okay in the previous recording?(answer with y or n)")
+        if choice == "n":
+            self.delete_last(cat)
+            self.record(filename, cat)
 
     def record_file(self, filename):
         print("* recording after")
@@ -116,6 +123,15 @@ class SoundRecorder:
         wf.writeframes(b''.join(frames))
         wf.close()
         self.dong.play()
+        print("this is your voice")
+        #Filteration(filename).highpassfilter(1000)
+        #Filteration(filename).lowpassfilter(380)
+        #sound = AudioSegment.from_file(filename, format="wav")
+        #play(sound)
+        AudioFile(filename).play()
+        choice = input("Is your voice okay in the previous recording?(answer with y or n)")
+        if choice == "n":
+           self.record_file(filename)
 
     def record_file_now(self, filename):
 
@@ -165,6 +181,7 @@ class SoundRecorder:
     def record_for_all_categories(self):
 
         print("You will have 3 seconds to record every word")
+        print("* you will see a sentance in red and you need to repeat it after the beep, you will listen to it again so please confirm with y or n to make sure it is recorded properly :")
         time.sleep(2)
 
         for category in self.categories:

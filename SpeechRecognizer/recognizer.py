@@ -8,10 +8,10 @@ catdir = cwd+"\\Categories.txt"
 file = open(catdir, "r")
 CATEGORIES = file.read().replace('\n', ',').split(',')
 file.close()
-
+second=3
 
 class Recognizer:
-    def __init__(self, from_file=False, file_name="", model="Model.h5", time=2):
+    def __init__(self, from_file=False, file_name="", model="Model.h5", time=second):
         self.model = load_model(model)
         self.file = "test.wav"
         self.categories = CATEGORIES
@@ -23,6 +23,8 @@ class Recognizer:
                 self.file = file_name
         else:
             self.recorder = SoundRecorder(recording_period=time)
+            #3lshan a record new recording
+
 
     def test_file(self,type="DNN"):
         test_x = np.array(get_features(self.file,type))

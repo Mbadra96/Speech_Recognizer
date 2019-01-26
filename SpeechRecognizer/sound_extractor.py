@@ -13,13 +13,11 @@ f = open(catdir, "r")
 CATEGORIES = f.read().replace('\n', ',').split(',')
 f.close()
 
-
 class SoundExtraction:
     def __init__(self, categories=CATEGORIES, directory=Dir):
         self.training_data = []
         self.categories = categories
         self.dir = directory
-
     def create_training_data(self,type='DNN'):
         for category in self.categories:
 
@@ -51,8 +49,6 @@ class SoundExtraction:
         pickle_out.close()
 
         print("Done Extracting data")
-
-
 def get_features(file, type='DNN'):
     audio, sr = librosa.load(file,mono=True)
     # we extract mfcc feature from data
@@ -60,7 +56,16 @@ def get_features(file, type='DNN'):
         mfcc = np.mean(librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40).T, axis=0)
     elif type is 'RNN':
         mfcc = librosa.feature.mfcc(y=audio, sr=sr)
-        pad_width = 87 - mfcc.shape[1]
+        pad_width = 130 - mfcc.shape[1]
+        #
         mfcc = np.pad(mfcc, pad_width=((0, 0), (0, pad_width)), mode='constant')
     return mfcc
+#numpy.pad(array, pad_width, mode, **kwargs)
+#array  input arra y
+#pad_width number of values padded to the edges of each axis
 
+#mode usually constant value padding
+
+#dh mainly used to get features acccording lw rnn aw dnnn
+#these are two different onditions
+#ba load el file using librosa
